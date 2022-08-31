@@ -1,0 +1,127 @@
+---
+title: "Sİngle Cell Data Analysis of Kupari et al 2019 "
+author: "YEK"
+date: "31 08 2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## In this workflow, vagal sensory neuron subclusters from single cell rna seq dataset published
+## in Kupari J. et al. 2019 paper will be queried for gene of interests. 
+
+```{r}
+
+library(Seurat)
+
+### read the cell x feature matrix:
+
+data = read.table("GSE124312_Vagus_ExpressionTable.txt")
+
+### Read the annotation data including cluster assignments from Kupari et al.:
+
+annotation_data = read.table("GSE124312_Vagus_AnnotationTable_modified.txt")
+
+head(annotation_data)
+
+### we need to subset our data df so that it will only include the cells 
+### which were assigned a cluster name in the annotation table: 
+
+subdata = data[,row.names(annotation_data)]
+
+ncol(data)
+
+seurat_data = CreateSeuratObject(counts = subdata, project = "vagus")
+
+seurat_data
+
+### we will only include the cells with NG cluster identity.
+
+Idents(seurat_data) = as.factor(annotation_data$Cluster)
+
+idents_data = Idents(seurat_data)
+
+### Convert to DF for easy access:
+
+idents_data = as.data.frame(idents_data)
+
+### Change column name:
+
+colnames(idents_data) = "cluster"
+
+### Find the positions of the cells which are clustered in any NG cluster:
+
+NG_cells = grep("NG", idents_data$cluster) ### getting the indices of NG cells.
+
+### Retrieve the row.names of the NG cells:
+
+NG_cell_rownames = row.names(idents_data)[NG_cells]
+
+### Subset the seurat data to only NG cells.
+
+seurat_data = seurat_data[, NG_cell_rownames]
+
+### Violin plots for the select genes:
+
+VlnPlot(seurat_data, features = c("Lypd6"))
+
+### Check the number of cells in each cluster:
+
+head(idents_data)
+
+dim(idents_data)
+
+### we form a new data frame containing only NG cells:
+
+idents_data_NG_cells = as.data.frame(idents_data[NG_cell_rownames,], row.names = NG_cell_rownames)
+
+head(idents_data_NG_cells)
+                      idents_data[NG_cell_rownames, ]
+X003_AAACGGGCACGGCGTT                            NG16
+X003_AAAGTAGCATGCCTTC                            NG15
+X003_AAATGCCAGGGTGTTG                            NG12
+X003_AACCATGGTGCCTGCA                            NG14
+X003_AACTCCCTCCTTTACA                             NG8
+X003_AACTGGTTCAGTTTGG                            NG14
+
+dim(idents_data_NG_cells)
+
+
+colnames(idents_data_NG_cells) = "cluster"
+head(idents_data_NG_cells)
+
+
+### Number of cells in the cluster NG3:
+
+table(idents_data_NG_cells$cluster ==  "NG3")
+
+
+## to directly get cell numbers: 
+
+ table(idents_data_NG_cells$cluster ==  "NG3")[2] ### second elements 
+
+### To print number of cells in all NG clusters:
+
+### Firstly add NG cluster names into a vector:
+
+NG_names = paste("NG", sep = "", 1:16)  
+
+
+for (x in 1:length(NG_names)) {print(paste0((NG_names[x]),":"," ", table(idents_data_NG_cells$cluster ==  NG_names[x])[2]," ","cells"))}
+
+
+sessionInfo()
+
+
+
+
+
+
+
+
+
+```
+
+
