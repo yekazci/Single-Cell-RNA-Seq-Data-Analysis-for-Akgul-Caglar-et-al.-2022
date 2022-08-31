@@ -1,0 +1,55 @@
+---
+title: "Zeisel et al 2018 single cell DRG data exploration"
+author: "YEK"
+date: "31 08 2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+
+library(Seurat)
+
+library(SeuratDisk)
+
+library(magrittr)
+
+setwd("DRG_data") ### directory containing loom files.
+
+Zeisel_et_al_DRG_data <- SeuratDisk::Connect(filename = "l6_r3_peripheral_sensory_neurons_one_column_per_cell.loom", mode = "r")
+
+## Convert to seurat object:
+
+Zeisel_et_al_DRG_data_Seurat = as.Seurat(Zeisel_et_al_DRG_data)
+
+### Explore the data which has different attributes:
+
+head(Zeisel_et_al_DRG_data_Seurat$ClusterName)
+
+### We see that the cells were clustered previously.
+
+### Exploring some other attributes: 
+
+head(Zeisel_et_al_DRG_data_Seurat$nCount_RNA)
+
+head(Zeisel_et_al_DRG_data_Seurat$orig.ident)
+
+head(Zeisel_et_al_DRG_data_Seurat$nFeature_RNA)
+
+head(Zeisel_et_al_DRG_data_Seurat$Neurotransmitter)
+
+### Check if the identity classes are Set  to the ClusterName:
+
+head(Idents(Zeisel_et_al_DRG_data_Seurat))
+
+VlnPlot(Zeisel_et_al_DRG_data_Seurat, features = c("Chrna4" , "Gpr35", "Mrgpr5", "Mrgpra3", "Mrgprb4"), ncol = 2) ### 2 images in a row.
+
+sessionInfo()
+
+
+```
+
+
