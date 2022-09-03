@@ -1,6 +1,6 @@
 ---
 title: "Sİngle Cell Data Analysis of Kupari et al 2019 "
-author: "YEK"
+author: "Yekazci"
 date: "31 08 2022"
 output: html_document
 ---
