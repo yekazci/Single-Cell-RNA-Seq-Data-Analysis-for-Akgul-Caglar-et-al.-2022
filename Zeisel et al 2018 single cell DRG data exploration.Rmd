@@ -1,6 +1,6 @@
 ---
 title: "Zeisel et al 2018 single cell DRG data exploration"
-author: "YEK"
+author: "Yekazci"
 date: "31 08 2022"
 output: html_document
 ---
