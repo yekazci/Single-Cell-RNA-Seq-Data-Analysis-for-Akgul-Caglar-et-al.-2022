@@ -2,4 +2,4 @@
 
 #This analysis outputs have been used in Akgul-Caglar T. et al. 2022 (in preparation).
 
-# In addition, Zhao Q. et al. 2022, single cell RNA-seq data was analyzed to explore the cell clusters. 
+#In addition, Zhao Q. et al. 2022, single cell RNA-seq data was analyzed to explore the cell clusters. 
